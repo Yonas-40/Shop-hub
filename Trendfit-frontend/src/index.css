@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the container takes at least the full viewport height */
+}
+.word-clamp-20 { /* Example class for 20 words */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: calc(20 * 1em * 0.8); /* Approximate width - adjust multiplier */
+}
+
+/* You might need to adjust other styles as needed */

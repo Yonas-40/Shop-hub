@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce(TrendFit.API)", "Ecommerce(TrendFit.API)\Ecommerce(TrendFit.API).csproj", "{2182D3ED-4945-4F05-8D5B-76C9564DF1BF}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Trendfit-frontend", "Trendfit-frontend\", "{93D2911A-B944-49DE-9692-1900CBA2D4CA}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_57683"
+		Debug.AspNetCompiler.PhysicalPath = "Trendfit-frontend\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_57683\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_57683"
+		Release.AspNetCompiler.PhysicalPath = "Trendfit-frontend\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_57683\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "57683"
+		SlnRelativePath = "Trendfit-frontend\"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9E312644-8EEC-4A52-8F7E-6C45A26E59A7}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2182D3ED-4945-4F05-8D5B-76C9564DF1BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2182D3ED-4945-4F05-8D5B-76C9564DF1BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2182D3ED-4945-4F05-8D5B-76C9564DF1BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2182D3ED-4945-4F05-8D5B-76C9564DF1BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93D2911A-B944-49DE-9692-1900CBA2D4CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93D2911A-B944-49DE-9692-1900CBA2D4CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93D2911A-B944-49DE-9692-1900CBA2D4CA}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{93D2911A-B944-49DE-9692-1900CBA2D4CA}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D92F5FA4-29D4-4EC7-B51E-695DCF1BEDB2}
+	EndGlobalSection
+EndGlobal

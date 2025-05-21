@@ -1,0 +1,6 @@
+@Ecommerce_TrendFit.API__HostAddress = http://localhost:5001
+
+GET {{Ecommerce_TrendFit.API__HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
