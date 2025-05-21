@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa6";
 import cartService from '../services/cartService';
 import { useAuth } from '../contexts/AuthContext';
+import { useCart } from '../contexts/CartContext';
+
 const Carts = () => {
     const { token, user } = useAuth();
     const [cartLoading, setCartLoading] = useState(false);
     const [cartError, setCartError] = useState(null);
+    const {cartCount, setCartCount} = useCart();
 
     // Mock cart items for now
     const [cartItems, setCartItems] = useState([]);
@@ -46,6 +49,8 @@ const Carts = () => {
             const cartItemsData = await cartService.removeItem(token, itemId);
             console.log('cartItems: ', cartItemsData);
             setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
+            const updatedCartItems = await cartService.getCartItems(token, user.id);
+            setCartCount(updatedCartItems.length); // Update the cart count
         } catch (err) {
             console.error("Error fetching cart items:", err);
             setCartError(err.message || 'Failed to fetch cart items.');

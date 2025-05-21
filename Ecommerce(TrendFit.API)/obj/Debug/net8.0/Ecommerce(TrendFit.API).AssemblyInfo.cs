@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Ecommerce(TrendFit.API)")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ca359341641144413280bf3a6cddb1f13d69773")]
 [assembly: System.Reflection.AssemblyProductAttribute("Ecommerce(TrendFit.API)")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Ecommerce(TrendFit.API)")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

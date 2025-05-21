@@ -5,10 +5,11 @@ import { FaHouse, FaCartShopping, FaChevronDown } from "react-icons/fa6";
 import cartService from '../services/cartService';
 import categoryService from '../services/categoryService';
 import { useAuth } from '../contexts/AuthContext';
+import { useCart } from '../contexts/CartContext';
 const Navbar = () => {
     const { token, user, logout } = useAuth();
+    const { cartCount } = useCart();
     const [activeCategory, setActiveCategory] = useState('All');
-    const [cartCount, setCartCount] = useState(null);
     const [categories, setCategories] = useState(null);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -19,20 +20,6 @@ const Navbar = () => {
     const [cartLoading, setCartLoading] = useState(false);
 
 
-    const fetchCartItems = async () => {
-        if (token && user?.id) {
-            setCartLoading(true);
-            try {
-                const cartItemsData = await cartService.getCartItems(token, user.id);
-                console.log('cartItems: ', cartItemsData);
-                setCartCount(cartItemsData.length); // Update the cartItems state
-            } catch (err) {
-                console.error("Error fetching cart items:", err);
-            } finally {
-                setCartLoading(false);
-            }
-        }
-    };
     const fetchCategories = async () => {
         if (token && user?.id) {
             setCartLoading(true);
@@ -49,7 +36,6 @@ const Navbar = () => {
     };
     // You might want to fetch cart items when the component mounts or when the user logs in
     useEffect(() => {
-        fetchCartItems();
         fetchCategories();
     }, [token, user?.id]); // Re-fetch if token or userId changes
 

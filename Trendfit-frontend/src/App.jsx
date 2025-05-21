@@ -31,6 +31,7 @@ import OrderConfirmation from './pages/OrderConfirmation';
 import About from './pages/About';
 import UserOrders from './pages/Orders';
 import OrderDetailsPage from './pages/OrderDetailsPage';
+import { CartProvider } from './contexts/CartContext';
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -69,6 +70,8 @@ function App() {
         <Router>
             <div className="app-container">
                 <AuthProvider>
+                    <CartProvider>
+
                     <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
                     <Routes>
                         {/* Public Routes */}
@@ -192,6 +195,8 @@ function App() {
                             <Route path="profile" element={<ProtectedAdminRoute><AdminProfile /></ProtectedAdminRoute>} />
                         </Route>
                     </Routes>
+
+                </CartProvider>
                 </AuthProvider>
             </div>
         </Router>

@@ -14,6 +14,8 @@ import {
     removeFromWishlist,
     fetchUserWishlist
 } from '../services/api';
+import { useCart } from '../contexts/CartContext';
+
 const Shop = () => {
     const { token, user } = useAuth();
     const [loading, setLoading] = useState(true);
@@ -24,6 +26,8 @@ const Shop = () => {
     const [wishlist, setWishlist] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState(null);
     const [feedbackType, setFeedbackType] = useState(null); // 'success', 'error', 'info'
+    const { cartCount, setCartCount } = useCart();
+
     // Filter and pagination states
     const [searchQuery, setSearchQuery] = useState('');
     const [viewMode, setViewMode] = useState('grid');
@@ -198,6 +202,9 @@ const Shop = () => {
                     setFeedbackType(null);
                 }, 3000);
             }
+            // After successfully adding to cart, update the cart count
+            const updatedCartItems = await cartService.getCartItems(token, user.id);
+            setCartCount(updatedCartItems.length); // Update the cart count
         } catch (err) {
             console.error("Error adding to cart:", err);
             setFeedbackMessage(err.message || 'Failed to add to cart');

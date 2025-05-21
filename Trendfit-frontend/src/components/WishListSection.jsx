@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { removeFromWishlist } from '../services/api';
 import cartService from '../services/cartService';
 import { useAuth } from '../contexts/AuthContext';
+import { useCart } from '../contexts/CartContext';
 
 export const WishlistSection = ({ userId, items }) => {
     const [wishlistItems, setWishlistItems] = useState(items);
@@ -12,6 +13,7 @@ export const WishlistSection = ({ userId, items }) => {
     const [feedback, setFeedback] = useState({ message: null, type: null });
     const [cartedProducts, setCartedProducts] = useState([]);
     const { token, user } = useAuth();
+    const { cartCount, setCartCount } = useCart();
     const itemsPerPage = 12; // Adjust as needed
 
     // Pagination logic for wishlist
@@ -40,6 +42,8 @@ export const WishlistSection = ({ userId, items }) => {
                 type: 'success'
             });
 
+            const updatedCartItems = await cartService.getCartItems(token, user.id);
+            setCartCount(updatedCartItems.length); // Update the cart count
             // Clear feedback after 3 seconds
             setTimeout(() => {
                 setFeedback({ message: null, type: null });
