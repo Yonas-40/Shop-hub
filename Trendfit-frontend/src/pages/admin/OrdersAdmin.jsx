@@ -4,7 +4,7 @@ import { FiEye, FiTruck, FiCheckCircle } from 'react-icons/fi';
 import orderService from '../../services/orderService';
 import { useAuth } from '../../contexts/AuthContext';
 
-const Orders = () => {
+const OrdersAdmin = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -164,4 +164,4 @@ const Orders = () => {
     );
 };
 
-export default Orders;
+export default OrdersAdmin;

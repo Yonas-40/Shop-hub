@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch, FaUser, FaShoppingCart, FaThLarge, FaThList } from 'react-icons/fa';
 import { FaChevronRight, FaChevronDown, FaChevronLeft, FaStar, FaCheck, FaFilter, FaBorderAll, FaList, FaHeart, FaEye, FaRegHeart } from "react-icons/fa6";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import productService from '../services/productService';
 import categoryService from '../services/categoryService';
 import cartService from '../services/cartService';
@@ -16,6 +16,7 @@ import {
 } from '../services/api';
 import { useCart } from '../contexts/CartContext';
 
+
 const Shop = () => {
     const { token, user } = useAuth();
     const [loading, setLoading] = useState(true);
@@ -27,7 +28,7 @@ const Shop = () => {
     const [feedbackMessage, setFeedbackMessage] = useState(null);
     const [feedbackType, setFeedbackType] = useState(null); // 'success', 'error', 'info'
     const { cartCount, setCartCount } = useCart();
-
+    const location = useLocation();
     // Filter and pagination states
     const [searchQuery, setSearchQuery] = useState('');
     const [viewMode, setViewMode] = useState('grid');
@@ -81,6 +82,22 @@ const Shop = () => {
 
         fetchInitialPriceRange();
     }, [token]);
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const categoryParam = queryParams.get('category');
+
+        if (categoryParam) {
+            // Find the category by name (case-insensitive)
+            const matchedCategory = categories.find(
+                cat => cat.name.toLowerCase() === categoryParam.toLowerCase()
+            );
+
+            if (matchedCategory) {
+                setSelectedCategories([matchedCategory.id]);
+            }
+        }
+    }, [location.search, categories]); // Run when URL search or categories change
 
     // Fetch wishlist if user is logged in
     useEffect(() => {

@@ -2,6 +2,7 @@
 using Ecommerce_TrendFit.API_.Data;
 using Ecommerce_TrendFit.API_.Extensions;
 using Ecommerce_TrendFit.API_.Middleware;
+using Ecommerce_TrendFit.API_.Repositories;
 using Ecommerce_TrendFit.API_.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -70,9 +71,13 @@ public class Program
             {
                 policy.WithOrigins("http://localhost:5173") // Replace with your frontend's exact origin
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
         });
+
+        // 2. Add SignalR services
+        builder.Services.AddSignalR(); // <--- ADD THIS
 
         builder.Services.AddAuthentication(options =>
             {
@@ -89,6 +94,24 @@ public class Program
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes("Y1fYo1ae52whEgazC/Xj8ftStXObG/qukYpkYUUIBOY=")) // 🔑 Must match key used when generating token
+                };
+                // 3. Add JWT Bearer token to SignalR context
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // If the request is for our hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/orderHub"))) // <--- Match your SignalR hub path here
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
@@ -120,7 +143,7 @@ public class Program
             app.UseSwaggerUI();
         }
         app.MapControllers();
-
+        app.MapHub<OrderHub>("/orderHub"); // <--- ADD THIS
         app.Run();
     }
 }

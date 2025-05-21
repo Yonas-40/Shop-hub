@@ -80,7 +80,7 @@ const Carts = () => {
                                 </div>
                                 <div className="ml-4 w-1/2">
                                     <h2 className="text-lg font-medium text-gray-900">{item.product.name}</h2>
-                                    <p className="text-gray-600">${item.product.price.toFixed(2)}</p>
+                                    <p className="text-gray-600">{item.product.price.toFixed(2)} kr</p>
                                 </div>
                                 <div className="w-2/4 flex items-center justify-end">
                                     <div className="flex border border-gray-300 rounded-md">
@@ -120,7 +120,7 @@ const Carts = () => {
                 {cartItems.length > 0 && (
                     <div className="py-4 px-6 border-t border-gray-200 flex justify-between items-center">
                         <h2 className="font-semibold text-lg text-gray-900">Subtotal:</h2>
-                        <p className="text-xl font-bold text-gray-900">${calculateSubtotal()}</p>
+                        <p className="text-xl font-bold text-gray-900">{calculateSubtotal()} kr</p>
                     </div>
                 )}
 

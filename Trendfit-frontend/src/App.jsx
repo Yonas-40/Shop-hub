@@ -8,7 +8,7 @@ import AdminDashboard from './components/AdminDashboard';
 import AdminLayout from './components/admin/AdminLayout';
 import Products from './pages/admin/Products';
 import ProductForm from './pages/admin/ProductForm';
-import Orders from './pages/admin/Orders';
+import OrdersAdmin from './pages/admin/OrdersAdmin';
 import OrderDetailsAdmin from './pages/admin/OrderDetail';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './index.css';
@@ -182,7 +182,7 @@ function App() {
                             <Route path="products" element={<ProtectedAdminRoute><Products /></ProtectedAdminRoute>} />
                             <Route path="products/new" element={<ProtectedAdminRoute><ProductForm /></ProtectedAdminRoute>} />
                             <Route path="products/edit/:id" element={<ProtectedAdminRoute><ProductForm /></ProtectedAdminRoute>} />
-                            <Route path="orders" element={<ProtectedAdminRoute><Orders /></ProtectedAdminRoute>} />
+                            <Route path="orders" element={<ProtectedAdminRoute><OrdersAdmin /></ProtectedAdminRoute>} />
                             <Route path="orders/:id" element={<ProtectedAdminRoute><OrderDetailsAdmin /></ProtectedAdminRoute>} />
                             <Route path="customers" element={<ProtectedAdminRoute><Customers /></ProtectedAdminRoute>} />
                             <Route path="customers/:id" element={<ProtectedAdminRoute><CustomerDetails /></ProtectedAdminRoute>} />

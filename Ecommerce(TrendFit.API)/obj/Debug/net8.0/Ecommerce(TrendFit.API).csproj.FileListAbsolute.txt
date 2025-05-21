@@ -146,3 +146,4 @@ C:\Users\yonas\source\repos\Ecommerce(TrendFit.API)\Ecommerce(TrendFit.API)\bin\
 C:\Users\yonas\source\repos\Ecommerce(TrendFit.API)\Ecommerce(TrendFit.API)\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\yonas\source\repos\Ecommerce(TrendFit.API)\Ecommerce(TrendFit.API)\obj\Debug\net8.0\Ecommerce(TrendFit.API).MvcApplicationPartsAssemblyInfo.cs
 C:\Users\yonas\source\repos\Ecommerce(TrendFit.API)\Ecommerce(TrendFit.API)\obj\Debug\net8.0\Ecommerce(TrendFit.API).sourcelink.json
+C:\Users\yonas\source\repos\Ecommerce(TrendFit.API)\Ecommerce(TrendFit.API)\bin\Debug\net8.0\Newtonsoft.Json.dll

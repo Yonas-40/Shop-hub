@@ -3,6 +3,9 @@ import { FaBoxOpen, FaShippingFast, FaCheckCircle, FaTimesCircle, FaHourglassHal
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import orderService from '../services/orderService'; // Assume this exists or adjust to fetchUserProfile
+import * as signalR from '@microsoft/signalr'; // Import SignalR client
+
+const SIGNALR_HUB_URL = 'https://localhost:5001/orderHub'; // Your SignalR hub URL
 
 const Orders = () => {
     const { user, loading: authLoading, token } = useAuth();
@@ -13,6 +16,8 @@ const Orders = () => {
     const ordersPerPage = 5; // Number of orders to display per page
 
     useEffect(() => {
+        let connection = null;
+
         const loadOrders = async () => {
             if (!user?.id) {
                 setIsLoading(false);
@@ -21,24 +26,64 @@ const Orders = () => {
 
             try {
                 setIsLoading(true);
-                const data = await orderService.getUserOrders(user.id, token); // Or fetchUserProfile(user.id) if orders are part of profile
+                const data = await orderService.getUserOrders(user.id, token);
                 console.log('user orders: ', data);
 
-                // --- Sorting Logic Added Here ---
                 const now = new Date();
                 const sortedData = data.sort((a, b) => {
                     const dateA = new Date(a.createdAt);
                     const dateB = new Date(b.createdAt);
                     const diffA = Math.abs(now.getTime() - dateA.getTime());
                     const diffB = Math.abs(now.getTime() - dateB.getTime());
-                    return diffA - diffB; // Sort by the smallest absolute difference
+                    return diffA - diffB;
                 });
-                // --- End Sorting Logic ---
 
                 setOrders(sortedData);
-                setError(null); // Clear any previous errors
+                setError(null);
+
+                // Initialize SignalR connection
+                connection = new signalR.HubConnectionBuilder()
+                    .withUrl(SIGNALR_HUB_URL, {
+                        accessTokenFactory: () => token // Pass the JWT token for authentication/authorization
+                    })
+                    .withAutomaticReconnect() // Optional: Automatically try to reconnect
+                    .build();
+
+                // Start the connection
+                await connection.start()
+                    .then(() => {
+                        console.log('SignalR Connected.');
+                        // If you use groups on the server, join the user's group
+                        connection.invoke("JoinUserGroup", user.id)
+                            .catch(err => console.error("Failed to join SignalR group:", err));
+                    })
+                    .catch(err => console.error("SignalR Connection Error: ", err));
+
+
+                // Listen for 'orderUpdated' events
+                connection.on('orderUpdated', (updatedOrder) => {
+                    console.log('Received real-time update for order:', updatedOrder);
+                    setOrders(prevOrders => {
+                        const existingOrderIndex = prevOrders.findIndex(order => order.id === updatedOrder.id);
+                        if (existingOrderIndex > -1) {
+                            // Update existing order
+                            const newOrders = [...prevOrders];
+                            newOrders[existingOrderIndex] = updatedOrder;
+                            return newOrders;
+                        }
+                        // If a new order is received, add it and re-sort
+                        return [...prevOrders, updatedOrder].sort((a, b) => {
+                            const dateA = new Date(a.createdAt);
+                            const dateB = new Date(b.createdAt);
+                            const diffA = Math.abs(now.getTime() - dateA.getTime());
+                            const diffB = Math.abs(now.getTime() - dateB.getTime());
+                            return diffA - diffB;
+                        });
+                    });
+                });
+
             } catch (err) {
-                console.error("Failed to fetch orders:", err);
+                console.error("Failed to fetch orders or establish SignalR connection:", err);
                 setError('Failed to load your orders. Please try again later.');
             } finally {
                 setIsLoading(false);
@@ -48,6 +93,14 @@ const Orders = () => {
         if (!authLoading) { // Only fetch if user authentication is resolved
             loadOrders();
         }
+
+        // Cleanup function for SignalR connection
+        return () => {
+            if (connection) {
+                console.log('SignalR Disconnecting.');
+                connection.stop();
+            }
+        };
     }, [user, authLoading, token]); // Added token to dependency array for correctness
 
     // Pagination Logic

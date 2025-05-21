@@ -71,13 +71,13 @@ const OrderDetail = () => {
                     </p>
                 </div>
                 <div className="mt-4 md:mt-0">
-                    <span className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${order.status === 'pending'
+                    <span className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${order.status === 'Pending'
                         ? 'bg-yellow-100 text-yellow-800'
-                        : order.status === 'processing'
+                        : order.status === 'Processing'
                             ? 'bg-blue-100 text-blue-800'
-                            : order.status === 'shipped'
+                            : order.status === 'Shipped'
                                 ? 'bg-purple-100 text-purple-800'
-                                : order.status === 'delivered'
+                                : order.status === 'Delivered'
                                     ? 'bg-green-100 text-green-800'
                                     : 'bg-red-100 text-red-800'
                         }`}>{order.status}</span>
@@ -107,7 +107,7 @@ const OrderDetail = () => {
                     </div>
                     <div className="flex justify-between py-1">
                         <span className="text-gray-600">Payment Method:</span>
-                        <span className="text-gray-800">{order.paymentMethod}</span>
+                        <span className="text-gray-800">{order.paymentMethod?.cardType}</span>
                     </div>
                 </div>
             </div>
@@ -171,9 +171,9 @@ const OrderDetail = () => {
                     {isUpdating && <p className="mt-2 text-blue-500">Updating status...</p>}
                 </div>
                 <div className="flex space-x-2">
-                    {order.status === 'pending' && (
+                    {order.status === 'Pending' && (
                         <button
-                            onClick={() => updateOrderStatus('processing')}
+                            onClick={() => updateOrderStatus('Processing')}
                             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                             disabled={isUpdating}
                         >
@@ -181,9 +181,9 @@ const OrderDetail = () => {
                             Mark as Processing
                         </button>
                     )}
-                    {order.status === 'processing' && (
+                    {order.status === 'Processing' && (
                         <button
-                            onClick={() => updateOrderStatus('shipped')}
+                            onClick={() => updateOrderStatus('Shipped')}
                             className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
                             disabled={isUpdating}
                         >
@@ -191,9 +191,9 @@ const OrderDetail = () => {
                             Mark as Shipped
                         </button>
                     )}
-                    {order.status === 'shipped' && (
+                    {order.status === 'Shipped' && (
                         <button
-                            onClick={() => updateOrderStatus('delivered')}
+                            onClick={() => updateOrderStatus('Delivered')}
                             className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                             disabled={isUpdating}
                         >
@@ -201,7 +201,7 @@ const OrderDetail = () => {
                             Mark as Delivered
                         </button>
                     )}
-                    {order.status !== 'canceled' && order.status !== 'delivered' && (
+                    {order.status !== 'Cancelled' && order.status !== 'Delivered' && (
                         <button
                             onClick={() => updateOrderStatus('cancelled')}
                             className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"

@@ -4,6 +4,8 @@ using Ecommerce_TrendFit.API_.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Ecommerce_TrendFit.API_.Repositories;
+using Microsoft.AspNetCore.SignalR;
 
 
 namespace Ecommerce_TrendFit.API_.Controllers;
@@ -13,10 +15,11 @@ namespace Ecommerce_TrendFit.API_.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly AppDbContext _context;
-
-    public OrdersController(AppDbContext context)
+    private readonly IHubContext<OrderHub> _hubContext;
+    public OrdersController(AppDbContext context, IHubContext<OrderHub> hubContext)
     {
         _context = context;
+        _hubContext = hubContext;
     }
 
     [HttpPost("create")]
@@ -221,7 +224,13 @@ public class OrdersController : ControllerBase
     //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateOrderStatus(int id, [FromBody] UpdateOrderStatusDto dto)
     {
-        var order = await _context.Orders.FindAsync(id);
+        var order = await _context.Orders
+            .Include(o => o.User) // Include User to get UserId for SignalR group targeting
+            .Include(o => o.ShippingOption) // Include shipping option for estimated days if needed by frontend
+            .Include(o => o.OrderItems) // Include order items for product names
+                .ThenInclude(oi => oi.Product)
+            .FirstOrDefaultAsync(o => o.Id == id);
+
         if (order == null) return NotFound();
 
         // Validate the new status (optional, but recommended)
@@ -234,6 +243,51 @@ public class OrdersController : ControllerBase
         order.Status = dto.Status;
         await _context.SaveChangesAsync();
 
-        return NoContent(); // Or return the updated order
+        // --- SignalR Emission Logic Added Here ---
+        // Create an OrderDto to send to the client, ensuring all necessary fields are included
+        var orderDto = new OrderDto
+        {
+            Id = order.Id,
+            OrderNumber = order.OrderNumber,
+            CreatedAt = order.CreatedAt,
+            TotalPrice = order.TotalPrice,
+            PaymentMethodId = order.PaymentMethodId,
+            ShippingCost = order.ShippingCost,
+            ShippingMethod = order.ShippingMethod,
+            ShippingOptionId = order.ShippingOptionId,
+            UserId = order.UserId,
+            UserName = order.User?.FullName, // Null check for User
+            Status = order.Status,
+            OrderItems = order.OrderItems.Select(oi => new OrderItemDto
+            {
+                Id = oi.Id,
+                ProductId = oi.ProductId,
+                Quantity = oi.Quantity,
+                UnitPrice = oi.UnitPrice,
+                ProductName = oi.Product?.Name // Null check for Product
+            }).ToList()
+            // Add ShippingOption to DTO if frontend needs estimatedDays:
+            // ShippingOption = order.ShippingOption != null ? new ShippingOptionDto { EstimatedDays = order.ShippingOption.EstimatedDays } : null
+            // You'll need to define a ShippingOptionDto for this if not already present.
+        };
+
+
+        // Send the updated order to the specific user's group
+        if (order.UserId != Guid.Empty)
+        {
+            // The method 'orderUpdated' matches the 'connection.on' listener in your React frontend
+            await _hubContext.Clients.Group(order.UserId.ToString()).SendAsync("orderUpdated", orderDto);
+            Console.WriteLine($"Order {order.Id} status updated to {order.Status}. Notifying user {order.UserId}.");
+        }
+        else
+        {
+            // Fallback: If for some reason the UserId is not available,
+            // you might choose to broadcast to all clients (less efficient)
+            // or just log an error.
+            Console.WriteLine($"Order {order.Id} status updated to {order.Status}, but UserId is missing. Not broadcasting.");
+        }
+        // --- End SignalR Emission Logic ---
+
+        return NoContent(); // Or return the updated orderDto if preferred
     }
 }
