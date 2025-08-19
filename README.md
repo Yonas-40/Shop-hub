@@ -102,7 +102,7 @@ Start the server:
 dotnet run
 ```
 
-API will run at `https://localhost:5001`
+API will run at `http://localhost:5001`
 
 ### Frontend Setup
 
