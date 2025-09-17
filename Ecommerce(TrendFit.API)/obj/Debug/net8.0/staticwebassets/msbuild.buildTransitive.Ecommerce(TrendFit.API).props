@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\Ecommerce(TrendFit.API).props" />
-</Project>
